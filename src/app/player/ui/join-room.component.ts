@@ -65,6 +65,8 @@ import { PlayerStoreService } from '../player-store.service';
   `,
 })
 export class JoinRoomComponent {
+  private static readonly storageKey = 'playerIdByNameRoom';
+
   roomCode = '';
   playerName = '';
   errorMessage = '';
@@ -79,27 +81,71 @@ export class JoinRoomComponent {
   joinRoom(): void {
     this.errorMessage = '';
 
-    if (!this.roomCode || !this.playerName) {
+    const trimmedRoomCode = this.roomCode.trim();
+    const trimmedName = this.playerName.trim();
+
+    if (!trimmedRoomCode || !trimmedName) {
       this.errorMessage = 'Completa el código y el nombre.';
+      return;
+    }
+
+    const savedPlayerId = this.getSavedPlayerId(trimmedName, trimmedRoomCode);
+    if (savedPlayerId) {
+      this.loading = true;
+      this.store.setJoinInfo(trimmedRoomCode, savedPlayerId, trimmedName, 1);
+      this.client.connect(trimmedRoomCode, savedPlayerId);
+      this.loading = false;
       return;
     }
 
     this.loading = true;
     this.api.joinRoom({
-      roomCode: this.roomCode,
-      name: this.playerName,
+      roomCode: trimmedRoomCode,
+      name: trimmedName,
       avatarId: 1,
     })
       .subscribe({
         next: (response) => {
           this.loading = false;
-          this.store.setJoinInfo(this.roomCode, response.playerId, this.playerName, 1);
-          this.client.connect(this.roomCode, response.playerId);
+          this.savePlayerId(trimmedName, trimmedRoomCode, response.playerId);
+          this.store.setJoinInfo(trimmedRoomCode, response.playerId, trimmedName, 1);
+          this.client.connect(trimmedRoomCode, response.playerId);
         },
         error: (error) => {
           this.loading = false;
           this.errorMessage = error?.error?.message ?? 'No se pudo conectar a la sala.';
         },
       });
+  }
+
+  private savePlayerId(name: string, roomCode: string, playerId: string): void {
+    const current = this.readStoredPlayers();
+    current[this.buildStorageKey(name, roomCode)] = playerId;
+    localStorage.setItem(JoinRoomComponent.storageKey, JSON.stringify(current));
+  }
+
+  private getSavedPlayerId(name: string, roomCode: string): string | null {
+    const current = this.readStoredPlayers();
+    return current[this.buildStorageKey(name, roomCode)] ?? null;
+  }
+
+  private readStoredPlayers(): Record<string, string> {
+    const raw = localStorage.getItem(JoinRoomComponent.storageKey);
+    if (!raw) {
+      return {};
+    }
+    try {
+      const parsed = JSON.parse(raw) as Record<string, string>;
+      if (parsed && typeof parsed === 'object') {
+        return parsed;
+      }
+      return {};
+    } catch {
+      return {};
+    }
+  }
+
+  private buildStorageKey(name: string, roomCode: string): string {
+    return `${name}|${roomCode}`;
   }
 }

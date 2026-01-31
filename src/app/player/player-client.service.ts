@@ -20,18 +20,23 @@ export class PlayerClientService {
 
     this.zone.runOutsideAngular(() => {
       this.eventSource = new EventSource(url);
-      this.eventSource.onopen = () => {
-        this.zone.run(() => {
-          this.reconnectAttempts = 0;
-          this.store.setConnectionState('CONNECTED');
+      const handleEvent = (message: MessageEvent) => {
+        // eslint-disable-next-line no-console
+        console.info('[PlayerClient] SSE message', {
+          type: message.type,
+          data: message.data,
         });
-      };
-      this.eventSource.onmessage = (message) => {
         this.zone.run(() => {
-          if (!message.data) {
+          if (!message.data || typeof message.data !== 'string') {
             return;
           }
-          const event = JSON.parse(message.data) as PlayerEvent;
+          const eventData = extractEventData(message.data);
+          if (!eventData) {
+            // eslint-disable-next-line no-console
+            console.warn('[PlayerClient] Unable to parse SSE payload', message.data);
+            return;
+          }
+          const event = eventData as PlayerEvent;
           if (event.type === 'PLAYER_SNAPSHOT') {
             this.store.setSnapshot((event as { payload: any }).payload);
             return;
@@ -39,6 +44,15 @@ export class PlayerClientService {
           this.store.applyEvent(event);
         });
       };
+      this.eventSource.onopen = () => {
+        this.zone.run(() => {
+          this.reconnectAttempts = 0;
+          this.store.setConnectionState('CONNECTED');
+        });
+      };
+      this.eventSource.onmessage = handleEvent;
+      this.eventSource.addEventListener('PLAYER_SNAPSHOT', handleEvent);
+      this.eventSource.addEventListener('ROLES_ASIGNADOS', handleEvent);
       this.eventSource.onerror = () => {
         this.zone.run(() => {
           this.store.setConnectionState('RECONNECTING');
@@ -64,3 +78,23 @@ export class PlayerClientService {
     }, delay);
   }
 }
+
+const extractEventData = (raw: string): PlayerEvent | null => {
+  try {
+    return JSON.parse(raw) as PlayerEvent;
+  } catch {
+    const dataLine = raw
+      .split('\n')
+      .map((line) => line.trim())
+      .find((line) => line.startsWith('data:'));
+    if (!dataLine) {
+      return null;
+    }
+    const payload = dataLine.replace(/^data:\s?/, '');
+    try {
+      return JSON.parse(payload) as PlayerEvent;
+    } catch {
+      return null;
+    }
+  }
+};

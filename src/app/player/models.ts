@@ -51,7 +51,14 @@ export interface PlayerSnapshotEvent {
 
 export type PlayerEvent = PlayerSnapshotEvent | { type: string; payload?: unknown };
 
-export type PlayerPhase = 'JOIN' | 'LOBBY' | 'ANSWER' | 'VOTE' | 'RESULTS' | 'WAITING';
+export type PlayerPhase =
+  | 'JOIN'
+  | 'LOBBY'
+  | 'ROLE_ASSIGNMENT'
+  | 'ANSWER'
+  | 'VOTE'
+  | 'RESULTS'
+  | 'WAITING';
 
 export interface PlayerViewModel {
   phase: PlayerPhase;
@@ -62,4 +69,5 @@ export interface PlayerViewModel {
   state: PlayerState | null;
   connectionState: ConnectionState;
   currentQuestion: PlayerQuestion | null;
+  isImpostor: boolean | null;
 }

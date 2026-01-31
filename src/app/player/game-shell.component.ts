@@ -6,6 +6,7 @@ import { LobbyComponent } from './ui/lobby.component';
 import { AnswerComponent } from './ui/answer.component';
 import { VoteComponent } from './ui/vote.component';
 import { ResultsComponent } from './ui/results.component';
+import { RoleAssignmentComponent } from './ui/role-assignment.component';
 
 @Component({
   selector: 'player-game-shell',
@@ -14,6 +15,7 @@ import { ResultsComponent } from './ui/results.component';
     CommonModule,
     JoinRoomComponent,
     LobbyComponent,
+    RoleAssignmentComponent,
     AnswerComponent,
     VoteComponent,
     ResultsComponent,
@@ -24,6 +26,7 @@ import { ResultsComponent } from './ui/results.component';
         <ng-container [ngSwitch]="vm.phase">
           <player-join-room *ngSwitchCase="'JOIN'"></player-join-room>
           <player-lobby *ngSwitchCase="'LOBBY'" [vm]="vm"></player-lobby>
+          <player-role-assignment *ngSwitchCase="'ROLE_ASSIGNMENT'" [vm]="vm"></player-role-assignment>
           <player-answer *ngSwitchCase="'ANSWER'"></player-answer>
           <player-vote *ngSwitchCase="'VOTE'"></player-vote>
           <player-results *ngSwitchCase="'RESULTS'"></player-results>

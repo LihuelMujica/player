@@ -4,6 +4,7 @@ import {
   ConnectionState,
   PlayerEvent,
   PlayerPhase,
+  PlayerQuestion,
   PlayerSnapshotPayload,
   PlayerState,
   PlayerViewModel,
@@ -18,6 +19,7 @@ const initialViewModel: PlayerViewModel = {
   state: null,
   connectionState: 'DISCONNECTED',
   currentQuestion: null,
+  isImpostor: null,
 };
 
 @Injectable({ providedIn: 'root' })
@@ -39,6 +41,7 @@ export class PlayerStoreService {
       state: payload.state,
       connectionState: payload.connectionState ?? 'CONNECTED',
       currentQuestion: payload.currentQuestion,
+      isImpostor: payload.isImpostor ?? null,
     };
     this.subject.next(nextState);
   }
@@ -52,9 +55,42 @@ export class PlayerStoreService {
       return;
     }
 
-    this.subject.next({
-      ...this.snapshot,
-    });
+    if (event.type === 'ROLES_ASIGNADOS') {
+      const payload = (event as {
+        payload?: {
+          playerId?: string;
+          name?: string;
+          avatarId?: number;
+          state?: PlayerState;
+          connectionState?: ConnectionState | null;
+          currentQuestion?: PlayerQuestion | null;
+          isImpostor?: boolean;
+          impostor?: boolean;
+        };
+      }).payload;
+      if (payload) {
+        const nextState: PlayerViewModel = {
+          ...this.snapshot,
+          phase: phaseFromState(payload.state ?? this.snapshot.state),
+          playerId: payload.playerId ?? this.snapshot.playerId,
+          name: payload.name ?? this.snapshot.name,
+          avatarId: payload.avatarId ?? this.snapshot.avatarId,
+          state: payload.state ?? this.snapshot.state,
+          connectionState: payload.connectionState ?? this.snapshot.connectionState,
+          currentQuestion: payload.currentQuestion ?? this.snapshot.currentQuestion,
+          isImpostor: payload.isImpostor ?? payload.impostor ?? this.snapshot.isImpostor,
+        };
+        // eslint-disable-next-line no-console
+        console.info('[PlayerStore] ROLES_ASIGNADOS applied', {
+          event,
+          nextState,
+        });
+        this.subject.next(nextState);
+        return;
+      }
+    }
+
+    this.subject.next({ ...this.snapshot });
   }
 
   setJoinInfo(roomCode: string, playerId: string, name: string, avatarId: number): void {
@@ -91,6 +127,7 @@ const phaseFromState = (state: PlayerState | null): PlayerPhase => {
     case 'EMPATE':
       return 'RESULTS';
     case 'ASIGNANDO_ROL':
+      return 'ROLE_ASSIGNMENT';
     case 'DEBATIENDO':
     case 'ESPERANDO_SIGUIENTE_RONDA':
       return 'WAITING';
