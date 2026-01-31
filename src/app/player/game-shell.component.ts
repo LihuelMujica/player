@@ -7,6 +7,7 @@ import { AnswerComponent } from './ui/answer.component';
 import { VoteComponent } from './ui/vote.component';
 import { ResultsComponent } from './ui/results.component';
 import { RoleAssignmentComponent } from './ui/role-assignment.component';
+import { DebateComponent } from './ui/debate.component';
 
 @Component({
   selector: 'player-game-shell',
@@ -19,6 +20,7 @@ import { RoleAssignmentComponent } from './ui/role-assignment.component';
     AnswerComponent,
     VoteComponent,
     ResultsComponent,
+    DebateComponent,
   ],
   template: `
     <div class="h-screen w-screen overflow-hidden">
@@ -30,6 +32,7 @@ import { RoleAssignmentComponent } from './ui/role-assignment.component';
           <player-answer *ngSwitchCase="'ANSWER'" [vm]="vm"></player-answer>
           <player-vote *ngSwitchCase="'VOTE'"></player-vote>
           <player-results *ngSwitchCase="'RESULTS'"></player-results>
+          <player-debate *ngSwitchCase="'DEBATE'" [vm]="vm"></player-debate>
           <player-lobby *ngSwitchDefault [vm]="vm"></player-lobby>
         </ng-container>
       </ng-container>

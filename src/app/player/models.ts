@@ -58,7 +58,8 @@ export type PlayerPhase =
   | 'ANSWER'
   | 'VOTE'
   | 'RESULTS'
-  | 'WAITING';
+  | 'WAITING'
+  | 'DEBATE';
 
 export interface PlayerViewModel {
   phase: PlayerPhase;
