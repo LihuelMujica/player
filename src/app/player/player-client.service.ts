@@ -61,6 +61,7 @@ export class PlayerClientService {
       this.eventSource.addEventListener('ROLES_ASIGNADOS', handleEvent);
       this.eventSource.addEventListener('PREGUNTA_ASIGNADA', handleEvent);
       this.eventSource.addEventListener('DEBATE_INICIADO', handleEvent);
+      this.eventSource.addEventListener('VOTACION_INICIADA', handleEvent);
       this.eventSource.onerror = () => {
         this.zone.run(() => {
           // eslint-disable-next-line no-console

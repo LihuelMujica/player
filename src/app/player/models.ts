@@ -71,4 +71,5 @@ export interface PlayerViewModel {
   connectionState: ConnectionState;
   currentQuestion: PlayerQuestion | null;
   isImpostor: boolean | null;
+  voteOptions?: VoteOption[];
 }
