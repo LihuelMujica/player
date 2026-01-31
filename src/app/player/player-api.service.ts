@@ -34,11 +34,11 @@ export class PlayerApiService {
     });
   }
 
-  vote(roomCode: string, playerId: string, voteFor: string): Observable<unknown> {
-    return this.http.post(`${this.baseUrl}/player/vote`, {
+  vote(roomCode: string, playerId: string, votedPlayerId: string): Observable<unknown> {
+    return this.http.post(`${this.baseUrl}/game/${roomCode}/send-votes`, {
       roomCode,
       playerId,
-      voteFor,
+      votedPlayerId,
     });
   }
 }

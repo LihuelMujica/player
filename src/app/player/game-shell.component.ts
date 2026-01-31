@@ -30,7 +30,7 @@ import { DebateComponent } from './ui/debate.component';
           <player-lobby *ngSwitchCase="'LOBBY'" [vm]="vm"></player-lobby>
           <player-role-assignment *ngSwitchCase="'ROLE_ASSIGNMENT'" [vm]="vm"></player-role-assignment>
           <player-answer *ngSwitchCase="'ANSWER'" [vm]="vm"></player-answer>
-          <player-vote *ngSwitchCase="'VOTE'"></player-vote>
+          <player-vote *ngSwitchCase="'VOTE'" [vm]="vm"></player-vote>
           <player-results *ngSwitchCase="'RESULTS'"></player-results>
           <player-debate *ngSwitchCase="'DEBATE'" [vm]="vm"></player-debate>
           <player-lobby *ngSwitchDefault [vm]="vm"></player-lobby>

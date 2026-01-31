@@ -20,6 +20,7 @@ const initialViewModel: PlayerViewModel = {
   connectionState: 'DISCONNECTED',
   currentQuestion: null,
   isImpostor: null,
+  voteOptions: [],
 };
 
 @Injectable({ providedIn: 'root' })
@@ -42,6 +43,7 @@ export class PlayerStoreService {
       connectionState: payload.connectionState ?? 'CONNECTED',
       currentQuestion: payload.currentQuestion,
       isImpostor: payload.isImpostor ?? null,
+      voteOptions: payload.voteOptions ?? this.snapshot.voteOptions ?? [],
     };
     this.subject.next(nextState);
   }
@@ -114,6 +116,20 @@ export class PlayerStoreService {
       };
       this.subject.next(nextState);
       return;
+    }
+
+    if (event.type === 'VOTACION_INICIADA') {
+      const payload = (event as { payload?: PlayerSnapshotPayload['voteOptions'] }).payload;
+      if (payload) {
+        const nextState: PlayerViewModel = {
+          ...this.snapshot,
+          phase: 'VOTE',
+          state: 'VOTANDO',
+          voteOptions: payload,
+        };
+        this.subject.next(nextState);
+        return;
+      }
     }
 
     this.subject.next({ ...this.snapshot });
