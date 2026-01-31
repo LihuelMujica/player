@@ -90,6 +90,14 @@ export class PlayerStoreService {
       }
     }
 
+    if (event.type === 'PREGUNTA_ASIGNADA') {
+      const payload = (event as { payload?: PlayerSnapshotPayload }).payload;
+      if (payload) {
+        this.setSnapshot(payload);
+      }
+      return;
+    }
+
     this.subject.next({ ...this.snapshot });
   }
 
