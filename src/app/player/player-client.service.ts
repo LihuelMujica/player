@@ -16,6 +16,8 @@ export class PlayerClientService {
   connect(roomCode: string, playerId: string): void {
     this.close();
     const url = `http://localhost:8080/sse/player?roomCode=${roomCode}&playerId=${playerId}`;
+    // eslint-disable-next-line no-console
+    console.info('[PlayerClient] Connecting to SSE', { url });
     this.store.setConnectionState('RECONNECTING');
 
     this.zone.runOutsideAngular(() => {
@@ -37,6 +39,8 @@ export class PlayerClientService {
             return;
           }
           const event = eventData as PlayerEvent;
+          // eslint-disable-next-line no-console
+          console.info('[PlayerClient] Parsed event', event);
           if (event.type === 'PLAYER_SNAPSHOT') {
             this.store.setSnapshot((event as { payload: any }).payload);
             return;
@@ -47,14 +51,19 @@ export class PlayerClientService {
       this.eventSource.onopen = () => {
         this.zone.run(() => {
           this.reconnectAttempts = 0;
+          // eslint-disable-next-line no-console
+          console.info('[PlayerClient] SSE connection opened');
           this.store.setConnectionState('CONNECTED');
         });
       };
       this.eventSource.onmessage = handleEvent;
       this.eventSource.addEventListener('PLAYER_SNAPSHOT', handleEvent);
       this.eventSource.addEventListener('ROLES_ASIGNADOS', handleEvent);
+      this.eventSource.addEventListener('PREGUNTA_ASIGNADA', handleEvent);
       this.eventSource.onerror = () => {
         this.zone.run(() => {
+          // eslint-disable-next-line no-console
+          console.warn('[PlayerClient] SSE connection error');
           this.store.setConnectionState('RECONNECTING');
           this.close();
           this.retry(roomCode, playerId);
