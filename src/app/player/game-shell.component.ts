@@ -23,7 +23,7 @@ import { DebateComponent } from './ui/debate.component';
     DebateComponent,
   ],
   template: `
-    <div class="h-screen w-screen overflow-hidden">
+    <div class="h-screen w-screen overflow-hidden tpm-root">
       <ng-container *ngIf="vm$ | async as vm">
         <ng-container [ngSwitch]="vm.phase">
           <player-join-room *ngSwitchCase="'JOIN'"></player-join-room>
