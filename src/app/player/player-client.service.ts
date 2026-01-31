@@ -1,0 +1,66 @@
+import { Injectable, NgZone } from '@angular/core';
+import { PlayerStoreService } from './player-store.service';
+import { PlayerEvent } from './models';
+
+@Injectable({ providedIn: 'root' })
+export class PlayerClientService {
+  private eventSource: EventSource | null = null;
+  private reconnectAttempts = 0;
+  private readonly maxBackoffMs = 8000;
+
+  constructor(
+    private readonly store: PlayerStoreService,
+    private readonly zone: NgZone,
+  ) {}
+
+  connect(roomCode: string, playerId: string): void {
+    this.close();
+    const url = `http://localhost:8080/sse/player?roomCode=${roomCode}&playerId=${playerId}`;
+    this.store.setConnectionState('RECONNECTING');
+
+    this.zone.runOutsideAngular(() => {
+      this.eventSource = new EventSource(url);
+      this.eventSource.onopen = () => {
+        this.zone.run(() => {
+          this.reconnectAttempts = 0;
+          this.store.setConnectionState('CONNECTED');
+        });
+      };
+      this.eventSource.onmessage = (message) => {
+        this.zone.run(() => {
+          if (!message.data) {
+            return;
+          }
+          const event = JSON.parse(message.data) as PlayerEvent;
+          if (event.type === 'PLAYER_SNAPSHOT') {
+            this.store.setSnapshot((event as { payload: any }).payload);
+            return;
+          }
+          this.store.applyEvent(event);
+        });
+      };
+      this.eventSource.onerror = () => {
+        this.zone.run(() => {
+          this.store.setConnectionState('RECONNECTING');
+          this.close();
+          this.retry(roomCode, playerId);
+        });
+      };
+    });
+  }
+
+  close(): void {
+    if (this.eventSource) {
+      this.eventSource.close();
+      this.eventSource = null;
+    }
+  }
+
+  private retry(roomCode: string, playerId: string): void {
+    this.reconnectAttempts += 1;
+    const delay = Math.min(1000 * this.reconnectAttempts, this.maxBackoffMs);
+    setTimeout(() => {
+      this.connect(roomCode, playerId);
+    }, delay);
+  }
+}
