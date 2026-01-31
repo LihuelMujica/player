@@ -20,13 +20,7 @@ export class PlayerClientService {
 
     this.zone.runOutsideAngular(() => {
       this.eventSource = new EventSource(url);
-      this.eventSource.onopen = () => {
-        this.zone.run(() => {
-          this.reconnectAttempts = 0;
-          this.store.setConnectionState('CONNECTED');
-        });
-      };
-      this.eventSource.onmessage = (message) => {
+      const handleEvent = (message: MessageEvent) => {
         this.zone.run(() => {
           if (!message.data) {
             return;
@@ -39,6 +33,15 @@ export class PlayerClientService {
           this.store.applyEvent(event);
         });
       };
+      this.eventSource.onopen = () => {
+        this.zone.run(() => {
+          this.reconnectAttempts = 0;
+          this.store.setConnectionState('CONNECTED');
+        });
+      };
+      this.eventSource.onmessage = handleEvent;
+      this.eventSource.addEventListener('PLAYER_SNAPSHOT', handleEvent);
+      this.eventSource.addEventListener('ROLES_ASIGNADOS', handleEvent);
       this.eventSource.onerror = () => {
         this.zone.run(() => {
           this.store.setConnectionState('RECONNECTING');

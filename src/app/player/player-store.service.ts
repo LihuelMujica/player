@@ -4,6 +4,7 @@ import {
   ConnectionState,
   PlayerEvent,
   PlayerPhase,
+  PlayerQuestion,
   PlayerSnapshotPayload,
   PlayerState,
   PlayerViewModel,
@@ -55,7 +56,18 @@ export class PlayerStoreService {
     }
 
     if (event.type === 'ROLES_ASIGNADOS') {
-      const payload = (event as { payload?: { impostor?: boolean } & PlayerSnapshotPayload }).payload;
+      const payload = (event as {
+        payload?: {
+          playerId?: string;
+          name?: string;
+          avatarId?: number;
+          state?: PlayerState;
+          connectionState?: ConnectionState | null;
+          currentQuestion?: PlayerQuestion | null;
+          isImpostor?: boolean;
+          impostor?: boolean;
+        };
+      }).payload;
       if (payload) {
         const nextState: PlayerViewModel = {
           ...this.snapshot,
