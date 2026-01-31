@@ -26,11 +26,11 @@ export class PlayerApiService {
     });
   }
 
-  submitAnswer(roomCode: string, playerId: string, answer: string): Observable<unknown> {
-    return this.http.post(`${this.baseUrl}/player/answer`, {
+  submitAnswer(roomCode: string, playerId: string, answerText: string): Observable<unknown> {
+    return this.http.post(`${this.baseUrl}/game/${roomCode}/send-answer`, {
       roomCode,
       playerId,
-      answer,
+      answerText,
     });
   }
 

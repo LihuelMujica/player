@@ -27,7 +27,7 @@ import { RoleAssignmentComponent } from './ui/role-assignment.component';
           <player-join-room *ngSwitchCase="'JOIN'"></player-join-room>
           <player-lobby *ngSwitchCase="'LOBBY'" [vm]="vm"></player-lobby>
           <player-role-assignment *ngSwitchCase="'ROLE_ASSIGNMENT'" [vm]="vm"></player-role-assignment>
-          <player-answer *ngSwitchCase="'ANSWER'"></player-answer>
+          <player-answer *ngSwitchCase="'ANSWER'" [vm]="vm"></player-answer>
           <player-vote *ngSwitchCase="'VOTE'"></player-vote>
           <player-results *ngSwitchCase="'RESULTS'"></player-results>
           <player-lobby *ngSwitchDefault [vm]="vm"></player-lobby>

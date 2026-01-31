@@ -47,9 +47,13 @@ export class PlayerStoreService {
   }
 
   applyEvent(event: PlayerEvent): void {
+    // eslint-disable-next-line no-console
+    console.info('[PlayerStore] applyEvent', event);
     if (event.type === 'PLAYER_SNAPSHOT') {
       const payload = (event as { payload: PlayerSnapshotPayload }).payload;
       if (payload) {
+        // eslint-disable-next-line no-console
+        console.info('[PlayerStore] PLAYER_SNAPSHOT payload', payload);
         this.setSnapshot(payload);
       }
       return;
@@ -88,6 +92,16 @@ export class PlayerStoreService {
         this.subject.next(nextState);
         return;
       }
+    }
+
+    if (event.type === 'PREGUNTA_ASIGNADA') {
+      const payload = (event as { payload?: PlayerSnapshotPayload }).payload;
+      if (payload) {
+        // eslint-disable-next-line no-console
+        console.info('[PlayerStore] PREGUNTA_ASIGNADA payload', payload);
+        this.setSnapshot(payload);
+      }
+      return;
     }
 
     this.subject.next({ ...this.snapshot });
