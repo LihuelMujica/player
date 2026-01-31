@@ -80,6 +80,11 @@ export class PlayerStoreService {
           currentQuestion: payload.currentQuestion ?? this.snapshot.currentQuestion,
           isImpostor: payload.isImpostor ?? payload.impostor ?? this.snapshot.isImpostor,
         };
+        // eslint-disable-next-line no-console
+        console.info('[PlayerStore] ROLES_ASIGNADOS applied', {
+          event,
+          nextState,
+        });
         this.subject.next(nextState);
         return;
       }
