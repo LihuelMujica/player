@@ -104,6 +104,18 @@ export class PlayerStoreService {
       return;
     }
 
+    if (event.type === 'DEBATE_INICIADO') {
+      // eslint-disable-next-line no-console
+      console.info('[PlayerStore] DEBATE_INICIADO payload', (event as { payload?: unknown }).payload);
+      const nextState: PlayerViewModel = {
+        ...this.snapshot,
+        phase: 'DEBATE',
+        state: 'DEBATIENDO',
+      };
+      this.subject.next(nextState);
+      return;
+    }
+
     this.subject.next({ ...this.snapshot });
   }
 
@@ -143,6 +155,7 @@ const phaseFromState = (state: PlayerState | null): PlayerPhase => {
     case 'ASIGNANDO_ROL':
       return 'ROLE_ASSIGNMENT';
     case 'DEBATIENDO':
+      return 'DEBATE';
     case 'ESPERANDO_SIGUIENTE_RONDA':
       return 'WAITING';
     case 'NOT_IN_ROOM':
