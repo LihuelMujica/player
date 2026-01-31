@@ -15,7 +15,7 @@ export class PlayerClientService {
 
   connect(roomCode: string, playerId: string): void {
     this.close();
-    const url = `http://18.222.254.35:8080/sse/player?roomCode=${roomCode}&playerId=${playerId}`;
+    const url = `http://localhost:8080/sse/player?roomCode=${roomCode}&playerId=${playerId}`;
     this.store.setConnectionState('RECONNECTING');
 
     this.zone.runOutsideAngular(() => {
