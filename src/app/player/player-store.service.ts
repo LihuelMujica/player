@@ -105,6 +105,8 @@ export class PlayerStoreService {
     }
 
     if (event.type === 'DEBATE_INICIADO') {
+      // eslint-disable-next-line no-console
+      console.info('[PlayerStore] DEBATE_INICIADO payload', (event as { payload?: unknown }).payload);
       const nextState: PlayerViewModel = {
         ...this.snapshot,
         phase: 'DEBATE',
