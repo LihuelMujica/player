@@ -10,25 +10,25 @@ import { PlayerStoreService } from '../player-store.service';
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div class="flex flex-col items-center justify-center h-full gap-8">
-      <header class="fixed top-0 w-full bg-white z-50">
-        <h1 class="text-5xl font-bold uppercase tracking-widest text-center py-6">Game Name</h1>
+    <div class="flex flex-col items-center justify-center h-full gap-8 tmp-shell">
+      <header class="fixed top-0 w-full z-50 tmp-header">
+        <h1 class="text-5xl uppercase tracking-widest text-center py-6 tmp-title">caretas</h1>
       </header>
 
-      <div class="border-2 border-gray-300 rounded-lg p-8 m-5 shadow-sm bg-white">
+      <div class="rounded-lg p-8 m-5 shadow-sm tmp-panel">
         <form
           class="flex flex-col items-center gap-6"
           (ngSubmit)="joinRoom()"
           #joinForm="ngForm"
         >
           <div class="flex flex-col items-start gap-2">
-            <label class="font-bold text-2xl" for="codigo">Código</label>
+            <label class="font-bold text-2xl tmp-label" for="codigo">Código</label>
             <input
               type="text"
               id="codigo"
               name="codigo"
               placeholder="1234"
-              class="border-2 border-gray-300 rounded-lg p-4 w-64 text-xl text-center"
+              class="rounded-lg p-4 w-64 text-xl text-center tmp-input"
               required
               maxlength="4"
               [(ngModel)]="roomCode"
@@ -36,24 +36,24 @@ import { PlayerStoreService } from '../player-store.service';
           </div>
 
           <div class="flex flex-col items-start gap-2">
-            <label class="font-bold text-2xl" for="nombre">Nombre</label>
+            <label class="font-bold text-2xl tmp-label" for="nombre">Nombre</label>
             <input
               type="text"
               id="nombre"
               name="nombre"
               placeholder="nombre"
-              class="border-2 border-gray-300 rounded-lg p-4 w-64 text-xl text-center"
+              class="rounded-lg p-4 w-64 text-xl text-center tmp-input"
               required
               [(ngModel)]="playerName"
             />
           </div>
 
-          <p *ngIf="errorMessage" class="text-red-600 text-center text-lg">
+          <p *ngIf="errorMessage" class="text-red-400 text-center text-lg">
             {{ errorMessage }}
           </p>
 
           <button
-            class="font-bold text-4xl underline mt-4 hover:text-gray-700"
+            class="font-bold text-4xl underline mt-4 tmp-button"
             type="submit"
             [disabled]="joinForm.invalid || loading"
           >

@@ -6,8 +6,10 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="flex flex-col items-center justify-center h-full">
-      <p class="text-2xl">Resultados de la ronda.</p>
+    <div class="flex flex-col items-center justify-center h-full tmp-shell">
+      <div class="tmp-panel p-8">
+        <p class="text-2xl tmp-copy">Resultados de la ronda.</p>
+      </div>
     </div>
   `,
 })
