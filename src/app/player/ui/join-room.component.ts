@@ -10,25 +10,25 @@ import { PlayerStoreService } from '../player-store.service';
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div class="flex flex-col items-center justify-center h-full gap-8">
-      <header class="fixed top-0 w-full bg-white z-50">
-        <h1 class="text-5xl font-bold uppercase tracking-widest text-center py-6">Game Name</h1>
+    <div class="flex flex-col items-center justify-center h-full gap-8 px-6 pt-28">
+      <header class="fixed top-0 w-full tpm-header z-50">
+        <h1 class="text-5xl font-bold uppercase text-center py-6 tpm-title">Game Name</h1>
       </header>
 
-      <div class="border-2 border-gray-300 rounded-lg p-8 m-5 shadow-sm bg-white">
+      <div class="tpm-panel p-8 m-5 w-full max-w-md">
         <form
           class="flex flex-col items-center gap-6"
           (ngSubmit)="joinRoom()"
           #joinForm="ngForm"
         >
           <div class="flex flex-col items-start gap-2">
-            <label class="font-bold text-2xl" for="codigo">Código</label>
+            <label class="font-bold text-2xl tpm-accent" for="codigo">Código</label>
             <input
               type="text"
               id="codigo"
               name="codigo"
               placeholder="1234"
-              class="border-2 border-gray-300 rounded-lg p-4 w-64 text-xl text-center"
+              class="tpm-input p-4 w-64 text-xl text-center"
               required
               maxlength="4"
               [(ngModel)]="roomCode"
@@ -36,24 +36,24 @@ import { PlayerStoreService } from '../player-store.service';
           </div>
 
           <div class="flex flex-col items-start gap-2">
-            <label class="font-bold text-2xl" for="nombre">Nombre</label>
+            <label class="font-bold text-2xl tpm-accent" for="nombre">Nombre</label>
             <input
               type="text"
               id="nombre"
               name="nombre"
               placeholder="nombre"
-              class="border-2 border-gray-300 rounded-lg p-4 w-64 text-xl text-center"
+              class="tpm-input p-4 w-64 text-xl text-center"
               required
               [(ngModel)]="playerName"
             />
           </div>
 
-          <p *ngIf="errorMessage" class="text-red-600 text-center text-lg">
+          <p *ngIf="errorMessage" class="text-red-300 text-center text-lg">
             {{ errorMessage }}
           </p>
 
           <button
-            class="font-bold text-4xl underline mt-4 hover:text-gray-700"
+            class="tpm-button text-3xl font-bold mt-4"
             type="submit"
             [disabled]="joinForm.invalid || loading"
           >
