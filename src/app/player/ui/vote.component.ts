@@ -5,11 +5,12 @@ import { finalize } from 'rxjs';
 import { PlayerApiService } from '../player-api.service';
 import { PlayerClientService } from '../player-client.service';
 import { PlayerViewModel, VoteOption } from '../models';
+import { AvatarImageUrlPipe } from './avatar-image-url.pipe';
 
 @Component({
   selector: 'player-vote',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AvatarImageUrlPipe],
   template: `
     <ng-container *ngIf="vm as viewModel">
       <div class="h-full w-full overflow-hidden flex flex-col tmp-shell">
@@ -88,9 +89,20 @@ import { PlayerViewModel, VoteOption } from '../models';
                     class="w-48 h-48 rounded-full flex items-center justify-center tmp-avatar"
                     aria-label="Avatar del jugador"
                   >
-                    <span class="text-6xl font-bold text-gray-200">
-                      {{ (viewModel.name || 'J')[0] }}
-                    </span>
+                    <ng-container
+                      *ngIf="(viewModel.avatarId | avatarImageUrl) as avatarUrl; else initials"
+                    >
+                      <img
+                        class="tmp-avatar-image"
+                        [src]="avatarUrl"
+                        [alt]="viewModel.name ? 'Avatar de ' + viewModel.name : 'Avatar del jugador'"
+                      />
+                    </ng-container>
+                    <ng-template #initials>
+                      <span class="text-6xl font-bold text-gray-200">
+                        {{ (viewModel.name || 'J')[0] }}
+                      </span>
+                    </ng-template>
                   </div>
                   <p class="text-4xl text-center tmp-copy">
                     {{ viewModel.name || 'Jugador' }}
