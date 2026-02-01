@@ -13,12 +13,13 @@ import { PlayerViewModel } from '../models';
       </header>
 
       <div class="flex flex-col items-center">
-        <div class="w-48 h-48 rounded-full overflow-hidden tmp-avatar">
-          <img
-            src="assets/img/avatar.svg"
-            alt="Avatar del jugador"
-            class="w-full h-full object-cover"
-          />
+        <div
+          class="w-48 h-48 rounded-full flex items-center justify-center tmp-avatar"
+          aria-label="Avatar del jugador"
+        >
+          <span class="text-6xl font-bold text-gray-200">
+            {{ (vm?.name || 'J')[0] }}
+          </span>
         </div>
         <p class="text-4xl text-center mt-4 tmp-copy">
           {{ vm?.name || 'nombre player' }}
