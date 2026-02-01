@@ -12,21 +12,35 @@ import { PlayerViewModel, VoteOption } from '../models';
   imports: [CommonModule, FormsModule],
   template: `
     <ng-container *ngIf="vm as viewModel">
-      <div class="h-full w-full overflow-hidden flex flex-col">
-        <header class="top-0 w-full bg-white z-50">
-          <h1 class="text-5xl font-bold uppercase tracking-widest text-center py-6">Game Name</h1>
+      <div class="h-full w-full overflow-hidden flex flex-col tmp-shell">
+        <header class="top-0 w-full z-50 tmp-header">
+          <h1 class="text-5xl uppercase tracking-widest text-center py-6 tmp-title">caretas</h1>
         </header>
 
         <main class="flex-1 flex flex-col items-center justify-center">
           <ng-container *ngIf="!isWaiting(viewModel); else waitingScreen">
-            <div class="justify-center items-center p-8 shadow-sm h-full w-1/2">
-              <p class="text-2xl text-center mb-5">Vota por quien es el traidor</p>
+            <div class="justify-center items-center p-8 shadow-sm h-full w-1/2 tmp-panel">
+              <p class="text-2xl text-center mb-5 tmp-copy">Vota por quien es el traidor</p>
               <form class="flex flex-col items-center gap-6" (ngSubmit)="onSubmit(viewModel)">
                 <div class="flex flex-col gap-2">
-                  <label class="font-bold">¿Quién es el traidor?</label>
+                  <label class="font-bold flex items-center gap-2 tmp-label">
+                    <svg
+                      class="knife-icon"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M21.5 3.5c-.6-.6-1.6-.6-2.2 0L13 9.8l1.8 1.8 6.2-6.1c.6-.6.6-1.6 0-2.1ZM2 21l6.7-2 5.4-5.4-3.7-3.7L4.9 15.3 2 22Zm3.6-4.6 4.1-4.1 1.8 1.8-4.1 4.1-2.4.7.6-2.5Z"
+                      />
+                    </svg>
+                    ¿Quién es el traidor?
+                  </label>
 
                   <label
-                    class="flex items-center gap-2"
+                    class="flex items-center gap-2 tmp-option"
                     *ngFor="let option of availableOptions"
                   >
                     <input
@@ -35,29 +49,31 @@ import { PlayerViewModel, VoteOption } from '../models';
                       [value]="option.playerId"
                       [(ngModel)]="selectedVote"
                       [disabled]="submitting"
+                      class="tmp-radio"
                     />
                     {{ option.playerName }}
                   </label>
 
-                  <label class="flex items-center gap-2">
+                  <label class="flex items-center gap-2 tmp-option">
                     <input
                       type="radio"
                       name="voto"
                       [value]="skipValue"
                       [(ngModel)]="selectedVote"
                       [disabled]="submitting"
+                      class="tmp-radio"
                     />
                     Saltar votación
                   </label>
                 </div>
                 <button
-                  class="text-4xl font-bold underline hover:text-gray-700 disabled:text-gray-400"
+                  class="text-4xl font-bold underline tmp-button"
                   type="submit"
                   [disabled]="submitting || !selectedVote"
                 >
                   Votar
                 </button>
-                <p *ngIf="submitError" class="text-red-600 text-base text-center">
+                <p *ngIf="submitError" class="text-red-400 text-base text-center">
                   {{ submitError }}
                 </p>
               </form>
@@ -69,17 +85,21 @@ import { PlayerViewModel, VoteOption } from '../models';
               <div>
                 <div class="flex flex-col items-center gap-4">
                   <div
-                    class="w-48 h-48 rounded-full border-2 border-gray-300 bg-gray-100 flex items-center justify-center"
+                    class="w-48 h-48 rounded-full flex items-center justify-center tmp-avatar"
                     aria-label="Avatar del jugador"
                   >
-                    <span class="text-6xl font-bold text-gray-400">
+                    <span class="text-6xl font-bold text-gray-200">
                       {{ (viewModel.name || 'J')[0] }}
                     </span>
                   </div>
-                  <p class="text-4xl text-center">{{ viewModel.name || 'Jugador' }}</p>
+                  <p class="text-4xl text-center tmp-copy">
+                    {{ viewModel.name || 'Jugador' }}
+                  </p>
                 </div>
                 <div class="m-5">
-                  <p class="text-2xl text-center">Esperando a que todos contesten...</p>
+                  <p class="text-2xl text-center tmp-copy">
+                    Esperando a que todos contesten...
+                  </p>
                 </div>
               </div>
             </div>

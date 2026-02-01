@@ -11,21 +11,21 @@ import { PlayerViewModel } from '../models';
   imports: [CommonModule, FormsModule],
   template: `
     <ng-container *ngIf="vm as viewModel">
-      <div class="h-full w-full overflow-hidden flex flex-col">
-        <header class="top-0 w-full bg-white z-50">
-          <h1 class="text-5xl font-bold uppercase tracking-widest text-center py-6">Game Name</h1>
+      <div class="h-full w-full overflow-hidden flex flex-col tmp-shell">
+        <header class="top-0 w-full z-50 tmp-header">
+          <h1 class="text-5xl uppercase tracking-widest text-center py-6 tmp-title">caretas</h1>
         </header>
 
         <main class="flex-1 flex flex-col items-center justify-center">
           <ng-container *ngIf="!isWaiting(viewModel); else waitingScreen">
-            <div class="justify-center items-center p-8 shadow-sm h-full w-1/2">
-              <p class="text-2xl text-center mb-5">
+            <div class="justify-center items-center p-8 shadow-sm h-full w-1/2 tmp-panel">
+              <p class="text-2xl text-center mb-5 tmp-copy">
                 {{ viewModel.currentQuestion?.pregunta || 'Esperando pregunta...' }}
               </p>
               <form class="flex flex-col items-center gap-6" (ngSubmit)="onSubmit(viewModel)">
                 <div class="w-full">
                   <input
-                    class="text-left border-2 border-gray-300 rounded-lg p-4 w-64 text-xl text-center w-full"
+                    class="text-left rounded-lg p-4 w-64 text-xl text-center w-full tmp-input"
                     type="text"
                     name="answerText"
                     placeholder="Responder"
@@ -34,13 +34,13 @@ import { PlayerViewModel } from '../models';
                   />
                 </div>
                 <button
-                  class="text-4xl font-bold underline hover:text-gray-700 disabled:text-gray-400"
+                  class="text-4xl font-bold underline tmp-button"
                   type="submit"
                   [disabled]="submitting || !answerText.trim()"
                 >
                   Enviar
                 </button>
-                <p *ngIf="submitError" class="text-red-600 text-base text-center">
+                <p *ngIf="submitError" class="text-red-400 text-base text-center">
                   {{ submitError }}
                 </p>
               </form>
@@ -52,17 +52,21 @@ import { PlayerViewModel } from '../models';
               <div>
                 <div class="flex flex-col items-center gap-4">
                   <div
-                    class="w-48 h-48 rounded-full border-2 border-gray-300 bg-gray-100 flex items-center justify-center"
+                    class="w-48 h-48 rounded-full flex items-center justify-center tmp-avatar"
                     aria-label="Avatar del jugador"
                   >
-                    <span class="text-6xl font-bold text-gray-400">
+                    <span class="text-6xl font-bold text-gray-200">
                       {{ (viewModel.name || 'J')[0] }}
                     </span>
                   </div>
-                  <p class="text-4xl text-center">{{ viewModel.name || 'Jugador' }}</p>
+                  <p class="text-4xl text-center tmp-copy">
+                    {{ viewModel.name || 'Jugador' }}
+                  </p>
                 </div>
                 <div class="m-5">
-                  <p class="text-2xl text-center">Esperando a que todos contesten...</p>
+                  <p class="text-2xl text-center tmp-copy">
+                    Esperando a que todos contesten...
+                  </p>
                 </div>
               </div>
             </div>
