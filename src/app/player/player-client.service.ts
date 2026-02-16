@@ -15,7 +15,7 @@ export class PlayerClientService {
 
   connect(roomCode: string, playerId: string): void {
     this.close();
-    const url = `https://caretas.up.railway.app/sse/player?roomCode=${roomCode}&playerId=${playerId}`;
+    const url = `https://caretas.apps.lihuel.ar/sse/player?roomCode=${roomCode}&playerId=${playerId}`;
     // eslint-disable-next-line no-console
     console.info('[PlayerClient] Connecting to SSE', { url });
     this.store.setConnectionState('RECONNECTING');
