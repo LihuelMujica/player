@@ -14,7 +14,7 @@ interface JoinRoomResponse {
 
 @Injectable({ providedIn: 'root' })
 export class PlayerApiService {
-  private readonly baseUrl = 'https://caretas.up.railway.app';
+  private readonly baseUrl = 'https://caretas.apps.lihuel.ar';
 
   constructor(private readonly http: HttpClient) {}
 
